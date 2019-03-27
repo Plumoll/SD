@@ -11,6 +11,7 @@ if __name__ == "__main__":
 	stringFiltered = re.sub('[^A-Za-z0-9 \n]+', '', fileFromServer)
 	stringSplitted = re.split("\ |\n", stringFiltered)
 	wordDictionary = {}
+	
 	for word in stringSplitted:
 		lowerWord = word.lower()
 		if lowerWord != '':
