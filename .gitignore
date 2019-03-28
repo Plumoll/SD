@@ -103,3 +103,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 Pract1/ibm_cloud_config
+Pract1/testzip/ibm_cloud_config
