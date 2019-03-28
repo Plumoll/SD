@@ -13,7 +13,7 @@ if __name__=='__main__':
     cf = CloudFunctions(res['ibm_cf'])
     odb = COSBackend(res['ibm_cos'])
     filesize = int(odb.head_object("magisd", "bible.txt")["content-length"])
-    rang = int(filesize/10)
+    rang = int(filesize/nFunctions)
     fileFromServer = odb.get_object("magisd", "bible.txt", extra_get_args={'Range':'bytes={0}-{1}'.format(rang-10, rang-2)}).decode('UTF-8')
     print(fileFromServer)
 
