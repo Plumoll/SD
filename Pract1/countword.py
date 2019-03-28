@@ -1,26 +1,33 @@
 import re
 from cos_backend import COSBackend
+import yaml
+import sys
+from collections import Counter
 
 
-if __name__ == "__main__":
-	odb = COSBackend()
+def main(args):
+	with open('ibm_cloud_config', 'r') as config_file:
+		res = yaml.safe_load(config_file)
+    #res['ibm_cos']['endpoint']
+	odb = COSBackend(res['ibm_cos'])
+	counts = Counter()
+	fileFromServer = odb.get_object(args[1], args[2], extra_get_args={'Range':args[3]}).decode('UTF-8')
 
-	fileFromServer = odb.get_object("magisd", "bible.txt", extra_get_args={'Range':'bytes=0-100000'}).decode('UTF-8')
-
-	newFile = open("newBible.txt", "w")
-	stringFiltered = re.sub('[^A-Za-z0-9 \n]+', '', fileFromServer)
+	#newFile = open("newBible.txt", "w")
+	#stringFiltered = re.sub('[^A-Za-z0-9 \n]+', '', fileFromServer)
+	stringFiltered = re.sub('[^A-Za-z \n]+', '', fileFromServer)
 	stringSplitted = re.split("\ |\n", stringFiltered)
-	wordDictionary = {}
-	
-	for word in stringSplitted:
-		lowerWord = word.lower()
-		if lowerWord != '':
-			if lowerWord in wordDictionary:
-				wordDictionary[lowerWord] = wordDictionary[lowerWord] + 1
-			else:
-				wordDictionary[lowerWord] = 1
-	
-	print(wordDictionary)
-	newFile.write(fileFromServer)
+	stringSplitted.remove("")
 
-	newFile.close()
+	counts.update(word.strip('.,?!"\'').lower() for word in stringSplitted)
+	
+	#print(wordDictionary)
+	#newFile.write(fileFromServer)
+	return dict(counts)
+	
+
+	#newFile.close()
+
+# if __name__ == "__main__":
+# 	print(main())
+#fileFromServer = odb.get_object("magisd", "bible.txt", extra_get_args={'Range':'bytes=0-100'}).decode('UTF-8')

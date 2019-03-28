@@ -1,0 +1,95 @@
+Task 1: Communication models and Middleware
+The goal of this task is to understand and use communication models and middleware concepts.
+
+Students should distinguish between the following communication models: synchronous and asynchronous, pull and push, transient and persistent, and stateless and stateful.
+
+Students should also understand direct (rpc, distributed objects) and indirect (message queues, pub/sub, group communication) communication middleware
+
+Playing out with MapReduce
+1. Introduction
+
+MapReduce is a programming model and implementation to enable the parallel processing of huge amounts of data. In a nutshell, it breaks a large dataset into smaller chunks to be processed separately on different worker nodes and automatically gathers the results across the multiple nodes to return a single result. 
+
+As it name suggests, it allows for distributed processing of the map() and reduce() functional operations, which carry out most of the programming logic. Indeed, it consists of three majors steps, which are the following ones: 
+
+"Map" step: Each worker node applies the "map()" function to the local data, and writes the output to a temporary storage. A master node ensures that only one copy of redundant input data is processed.
+"Shuffle" step: Worker nodes redistribute data based on the output keys (produced by the "map()" function), such that all data belonging to one key is located on the same worker node.
+"Reduce" step: Worker nodes now process each group of output data, per key, in parallel.
+Because each mapping operation is independent of the others, all maps can be performed in parallel. The same occurs to the reducers, given that all outputs of the map operation with the same key are handed to the same reducer. 
+
+Here you can see the general process of MapReduce for counting the frequence of each word, what is known as Wordcount. Each map phase receives its input and prepares intermediary key as pairs of (key,value), where the key is the actual word and the value is the word's current frequency, namely 1. Shuffling phase guarantees that all pairs with the same key will serve as input for only one reducer, so in reduce phase we can very easily calculate the frequency of each word.
+Image result for MapReduce
+For a general overview of MapReduce, we recommend you to read the (in)famous Google paper: MapReduce: Simplified Data Processing on Large Clusters:
+
+https://static.googleusercontent.com/media/research.google.com/es//archive/mapreduce-osdi04.pdf
+
+
+2. Goals
+The objective of this practical assignment is to write two very simple programs:
+
+CountingWords: Counts the total number of words in a text file. For example, given the following text: "I love Distributed Systems", the output of CountingWords should be 4 words.
+WordCount: Counts the number of occurrences of each word in a text file. For instance, given the following text: "foo bar bar foo", the output of WordCount should be: bar, 2; foo, 2.
+In MapReduce systems like Hadoop, both programs are the equivalent of the standard "Hello, world!" C program you used to write when learning a new programming language.
+
+
+
+3. Tasks to do
+3.1. Function-based MapReduce
+
+IBM Cloud Functions, as a serverless technology, is a practical tool to implement a data analytics frameworks due to its elasticity and high-scalability. Serverless provides built-in availability and fault tolerance. You don't need to architect for these capabilities since the services running the application provide them by default. On the other side, Serverless Functions lack powerful addressing and communication mechanisms between them. In this event-driven model, functions must usually access other distributed services  to communicate , read inputs, write outputs, or even synchronize between them. Examples of these services are Object Stores like IBM COS or, NoSQL databases like IBM Cloudant, and in-memory stores like Redis. These third-party services will be used for synchronization and consistency in many cases.
+
+The goal of this task is to implement the CountingWords and WordCount MapReduce applications by Using IBM Cloud Functions and IBM Cloud Object Storage. As a further simplification, you don't need also to implement the "Shuffle" step. Throughout this task, we will assume the existence of a single reducer. Hence, all the parallelism will be brought to the system through the parallelization of the map() operation. 
+
+First, your task is to implement an orchestrator.py, responsible to put into execution the map() functions, monitor them, and then launch the reduce() function. The orchestrator is executed in your laptop, alongside with this library that will help you to invoke functions in the IBM CF service. To get the credentials to use this library go here.
+
+To speedup the map() phase, you must create logical partitions of the dataset based on a number of partitions. To do so, the orhcetsrator.py must accept as input parameters the name of the dataset to analalyze, and the number of partitions (integer). Then, the orhcetsrator must create diferent ranges based on it. Note that the number of partitions will determine the final number of map() functions. For example. If the dataset takes 10MB and you introduce 2 as the number of partitions, this means that the orchestrator must create 2 partitions: one from [0Mb to 50Mb] and another from [50Mb to 100Mb], finally invoking 2 actions, each with each different range. The get_object() method of the cos_backend.py module allows to introduce the desired range trough a parameter called extra_get_args. For example: cos.get_object(..., extra_get_args={'Range': 'bytes=0-100'})
+
+The map() function must read the data from COS with the cos_backend.py module developed in the previous labs. Then, do the appropriate calculations, and finally store back to COS the partial results. The reduce() function will read from COS all the partial results and apply the reduce phase, eventually storing the final results to COS. The orchestrator.py must monitor IBM COS (polling) to see if the results are available, and when available, download them.
+
+IBM Cloud Configuration: Avoid using the keys to access to the IBM services in the code. Instead, use a configuration file (in .yaml format) located in the root direcory of the project, and named ibm_cloud_config. Download this file and put your credentials. Then, in the orchestrator.py load the configuration by:
+------
+import yaml
+with open('ibm_cloud_config', 'r') as config_file:
+    res = yaml.safe_load(config_file)
+
+ibm_cos_endpoint = res['ibm_cos']['endpoint']
+...
+-----
+
+Run example from console: python3 orchestrator.py pg2000.txt 10
+
+[OPTIONAL]
+Virtual partitioning may cut words, since the orchestrator does not know the content of the file. As an optional task with extra qualification, Implement a way to avoid cut words.
+
+[OPTIONAL]
+As an optional task with extra qualification, use rabbitmq (IBM CloudAMQP) instead of pulling IBM COS for monitoring the functions.
+Find an example here: https://www.cloudamqp.com/docs/python.html
+
+4. Evaluation
+To evaluate your solution, you should the following datasets. Download them from the original server and upload them to your COS bucket:
+
+
+Sherlock Holmes  (6.5M) (English): https://norvig.com/big.txt
+El Quijote (2.2M) (Spanish): http://www.gutenberg.org/cache/epub/2000/pg2000.txt
+The Bible (4.5M) (English): http://www.gutenberg.org/cache/epub/10/pg10.txt
+Once your applications work correctly with the previous small files, we will now use large text files that were created by concatenating books from Project Gutenberg. You can find these files at the following URL (they are compressed to reduce download times): http://cloudlab.urv.cat/josep/distributed_systems/
+
+- Calculate the speedup of your platform compared to a sequential implementation. Make experiments with different number of chunk_size.
+
+
+5. Deliverables
+Prepare a report explaining the architecture and validation of your solution, along with your code. The report must also include the speedups achieved by your solution. The explanation should be concise but meaningful. Please, avoid "biblical" explanations that don't shed light on the internals of your solution.
+
+Personal github. All groups must create their own github repository with their code and documentation. 
+
+
+6. Assignment scores
+The corresponding scores for each task are the following:
+[5 pts] General implementation of the MapReduce prototype (orchestrator, partitioning, monitoring)
+
+[2 pts] Correct implementation of the CountingWords program, along with the corresponding speedups.
+
+[2 pts] Correct implementation of the WordCount program, along with the corresponding speedups.
+
+[1 pt] A good writing of the deliverable report explaining your solution: architecture, implementation and validation. 
+

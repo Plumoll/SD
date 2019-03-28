@@ -14,17 +14,25 @@ if __name__=='__main__':
     odb = COSBackend(res['ibm_cos'])
     filesize = int(odb.head_object("magisd", "bible.txt")["content-length"])
     rang = int(filesize/nFunctions)
-    fileFromServer = odb.get_object("magisd", "bible.txt", extra_get_args={'Range':'bytes={0}-{1}'.format(rang-10, rang-2)}).decode('UTF-8')
+    fileFromServer = odb.get_object("magisd", "bible.txt", extra_get_args={'Range':'bytes={0}-{1}'.format(rang-10, rang)}).decode('UTF-8')
     print(fileFromServer)
 
-    while(fileFromServer[-1] != " "):
-        fileFromServer = fileFromServer[:-1]
-        print(fileFromServer)
-        rang = rang - 1
+    _, rang = cutWord(fileFromServer, rang)
 
     print(rang)
-    fileFromServer = odb.get_object("magisd", "bible.txt", extra_get_args={'Range':'bytes={0}-{1}'.format(0, rang-2)}).decode('UTF-8')
-    print(fileFromServer)
+    print(cf.invoke_with_result("countword", payload={'.format(0, rang)}))
+    #fileFromServer = odb.get_object("magisd", "bible.txt", extra_get_args={'Range':'bytes={0}-{1}'.format(0, rang-2)}).decode('UTF-8')
+    #print(fileFromServer)
 
     
+def cutWord(fileFromServer, rang):
+    if(fileFromServer[-1] != " "):
+        cutWord(fileFromServer[:-1], rang-1)
+    else:
+        return fileFromServer, rang
 
+    # while(fileFromServer[-1] != " "):
+    #     fileFromServer = fileFromServer[:-1]
+    #     print(fileFromServer)
+    #     rang = rang - 1
+    # return rang
