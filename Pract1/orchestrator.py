@@ -9,8 +9,6 @@ def selectRange(fileFromServer, rang):
         rang = rang - 1
     return rang
     
-
-
 if __name__=='__main__':
     filename=sys.argv[1]
     nFunctions=int(sys.argv[2])
@@ -34,7 +32,3 @@ if __name__=='__main__':
     #call function bottomRanG -> fileSize
 
     print(filesize)
-
-
-
-
