@@ -25,10 +25,14 @@ if __name__=='__main__':
         topRang = selectRange(fileFromServer, topRang)
         
         #call function
-        print(cf.invoke_with_result("test" ,{"bucket": "magisd", "fileName": filename, "rang": "bytes=0-400000"}))
-        break
+        cf.invoke("pikachu" ,{"bucket": "magisd", "fileName": filename, "rang": "bytes={0}-{1}".format(bottomRang, topRang), "endpoint":res['ibm_cos']["endpoint"],
+                            "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":"amqp://xbjymxoa:jdlKHnEzsJ3woxT8wHGtox-8PI7kJXwW@caterpillar.rmq.cloudamqp.com/xbjymxoa"})
         
         bottomRang = topRang
-    #call function bottomRanG -> fileSize
+
+
+    cf.invoke("pikachu" ,{"bucket": "magisd", "fileName": filename, "rang": "bytes={0}-{1}".format(bottomRang, filesize), "endpoint":res['ibm_cos']["endpoint"],
+                            "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":"amqp://xbjymxoa:jdlKHnEzsJ3woxT8wHGtox-8PI7kJXwW@caterpillar.rmq.cloudamqp.com/xbjymxoa"})
+        
 
     print(filesize)

@@ -1,19 +1,21 @@
 import pika, json, yaml
 from collections import Counter
 
-daux = {}
+df = {}
 n = 0
 
 def callback(ch, method, properties, body):
         received_data = json.loads(body)
-        global daux
+        global df
         global n
-        df = Counter(daux) + Counter(body)
-        daux = df
+        daux = {}
+        daux = Counter(df) + Counter(received_data)
+        df = dict(daux)
         n = n + 1
-        if(n==2):
+        if(n==10):
             ch.stop_consuming()
-        print(" [x] Received %r" % received_data)
+        #print(" [x] Received %r" % received_data)
+        #print("\n\n\n\n\n{0}".format(n))
 
 #def main(args):
 def main():
@@ -30,7 +32,8 @@ def main():
     channel.start_consuming()
     connection.close()
     #return daux
-    print(daux)
+    global df
+    print(dict(df))
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,9 @@
 {
     "bucket": "magisd",
     "fileName": "bible.txt",
-    "rang": "bytes=0-100"
+    "rang": "bytes=100-200",
+    "endpoint": "https://s3.eu-gb.cloud-object-storage.appdomain.cloud",
+    "access_key": "e019556b935449149ff69609e8fb6208",
+    "secret_key": "6f6513356d51e78c2f3a8eaf6087ca1e3f57d691f5ef14e2",
+    "url": "amqp://xbjymxoa:jdlKHnEzsJ3woxT8wHGtox-8PI7kJXwW@caterpillar.rmq.cloudamqp.com/xbjymxoa"
 }
