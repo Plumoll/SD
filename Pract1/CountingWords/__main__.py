@@ -1,31 +1,27 @@
 import re, json, pika
 from cos_backend import COSBackend
-from collections import Counter
 
 def main(args):
 	s1 = json.dumps(args)
 	args = json.loads(s1)
-	print(args)
 	odb = COSBackend(args["endpoint"], args['secret_key'], args['access_key'])
-	counts = Counter()
 	
 	url = args["url"]
 	params = pika.URLParameters(url)
 	connection = pika.BlockingConnection(params)
 	channel = connection.channel()
-	channel.queue_declare(queue='map')
+	channel.queue_declare(queue='wordCount')
 
-	fileFromServer = odb.get_object(args["bucket"], args["fileName"], extra_get_args={'Range':args["rang"]}).decode('UTF-8')
+	fileFromServer = odb.get_object(args["bucket"], args["fileName"], extra_get_args={'Range':args["rang"]}).decode('UTF-8', errors='ignore')
 	#stringFiltered = re.sub('[^A-Za-z0-9 \n]+', '', fileFromServer)
+	#Delete unwanted characters
 	stringFiltered = re.sub('[^A-Za-z \n]+', '', fileFromServer)
+	#Split the string
 	stringSplitted = re.split("\ |\n", stringFiltered)
-	# while("" in stringSplitted):
-	# 	stringSplitted.remove("")
+	#Delete "" in array
+	stringSplitted = list(filter(None, stringSplitted))
 
-	counts.update(word.strip('.,?!"\'').lower() for word in stringSplitted)
-	aux = dict(counts).pop("")
-	dumped_json_string = json.dumps(dict(counts))
-	channel.basic_publish(exchange='', routing_key='map', body=dumped_json_string)
+	
+	channel.basic_publish(exchange='', routing_key='CountingWords', body=str(len(stringSplitted)))
 	connection.close()
 	return {}
-	#return (dict(counts))
