@@ -12,10 +12,11 @@ def main(args):
 	params = pika.URLParameters(url)
 	connection = pika.BlockingConnection(params)
 	channel = connection.channel()
-	channel.queue_declare(queue='map')
+	channel.queue_declare(queue='WordCount')
 
 	fileFromServer = odb.get_object(args["bucket"], args["fileName"], extra_get_args={'Range':args["rang"]}).decode('UTF-8', errors='ignore')
 	#stringFiltered = re.sub('[^A-Za-z0-9 \n]+', '', fileFromServer)
+	
 	#Delete unwanted characters
 	stringFiltered = re.sub('[^A-Za-z \n]+', '', fileFromServer)
 	#Split the string
