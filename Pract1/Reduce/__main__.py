@@ -4,23 +4,24 @@ from cos_backend import COSBackend
 
 df = {}
 n = 0
-words = 0
 iterations = 0
 odb = None
 
 def CountingWordsCallback(ch, method, properties, body):
-    global words
     global n
+    global df
     global odb
     global iterations
 
-    words += int(body)
+    received_data = json.loads(body)
+    daux = Counter(df) + Counter(received_data)
+    df = dict(daux)
     n += 1
     print(n)
+    print(df)
     if(n == iterations):
-        stringFiltered = re.sub('[^A-Za-z \n]+', '', body.decode('UTF-8'))
-        dumped_json_string = json.dumps({"words": words})
-        odb.put_object("magisd", stringFiltered[:-3]+'ResultCountingWords.txt', dumped_json_string)
+        dumped_json_string = json.dumps(df)
+        odb.put_object("magisd", 'ResultCountingWord.txt', dumped_json_string)
         ch.stop_consuming()
 
 def WordCountCallback(ch, method, properties, body):
@@ -48,13 +49,12 @@ def WordCountCallback(ch, method, properties, body):
 def main(args):
     global odb
     global iterations
-    global words
     
     s1 = json.dumps(args)
     args = json.loads(s1)
     odb = COSBackend(args["endpoint"], args['secret_key'], args['access_key'])
     url = args["url"]
-    iterations=args["iter"]
+    iterations=10
 
     params = pika.URLParameters(url)
     connection = pika.BlockingConnection(params)
@@ -62,10 +62,8 @@ def main(args):
     channel.queue_declare(queue='WordCount')
     channel.queue_declare(queue='CountingWords')
     channel.basic_consume(WordCountCallback, queue="WordCount", no_ack=True)
-    channel.basic_consume(CountingWordsCallback, queue='CountingWords', no_ack=True)
+    channel.basic_consume(CountingWordsCallback, queue="CountingWords", no_ack=True)
     
-    
-
     channel.start_consuming()
     connection.close()
     return {}

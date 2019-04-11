@@ -16,14 +16,16 @@ def invokeFunctions(function, nFunctions, fileSize, fileName, res, cf):
         fileFromServer = odb.get_object("magisd", fileName, extra_get_args={'Range':'bytes={0}-{1}'.format(topRang-20, topRang)}).decode('UTF-8',errors='ignore')
         topRang = selectRange(fileFromServer, topRang)
         cf.invoke(function ,{"bucket": res['ibm_cos']["bucket"], "fileName": fileName, "rang": "bytes={0}-{1}".format(bottomRang, topRang), "endpoint":res['ibm_cos']["endpoint"],
-                             "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":"amqp://xbjymxoa:jdlKHnEzsJ3woxT8wHGtox-8PI7kJXwW@caterpillar.rmq.cloudamqp.com/xbjymxoa",
+                             "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":res["rabbitmq"]["url"],
                              "functionNumber":str(i)})
+        bottomRang = topRang
 
     cf.invoke(function ,{"bucket": res['ibm_cos']["bucket"], "fileName": fileName, "rang": "bytes={0}-{1}".format(bottomRang, fileSize), "endpoint":res['ibm_cos']["endpoint"],
-                            "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":"amqp://xbjymxoa:jdlKHnEzsJ3woxT8wHGtox-8PI7kJXwW@caterpillar.rmq.cloudamqp.com/xbjymxoa",
+                            "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":res["rabbitmq"]["url"],
                              "functionNumber":str(nFunctions)})
+
     _ = cf.invoke_with_result("reduce" ,{"bucket": res['ibm_cos']["bucket"], "endpoint":res['ibm_cos']["endpoint"],
-                            "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":"amqp://xbjymxoa:jdlKHnEzsJ3woxT8wHGtox-8PI7kJXwW@caterpillar.rmq.cloudamqp.com/xbjymxoa",
+                            "access_key":res['ibm_cos']["access_key"], "secret_key":res['ibm_cos']["secret_key"], "url":res["rabbitmq"]["url"],
                              "iter":nFunctions})
     
 if __name__=='__main__':
@@ -36,10 +38,6 @@ if __name__=='__main__':
     fileSize = int(odb.head_object("magisd", fileName)["content-length"])
 
     start = time.time()
-    invokeFunctions("wordCount", nFunctions,  fileSize, fileName, res, cf)
-    end = time.time()
-    print(end-start)  
-    start = time.time()
-    invokeFunctions("pikachu", nFunctions,  fileSize, fileName, res, cf)
+    invokeFunctions(sys.argv[3], nFunctions,  fileSize, fileName, res, cf)
     end = time.time()
     print(end-start)  
