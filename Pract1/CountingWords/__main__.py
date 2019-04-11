@@ -21,7 +21,7 @@ def main(args):
 	#Delete "" in array
 	stringSplitted = list(filter(None, stringSplitted))
 
-	
-	channel.basic_publish(exchange='', routing_key='CountingWords', body=str(len(stringSplitted)))
+	body = json.dumps({"words":len(stringSplitted)})
+	channel.basic_publish(exchange='', routing_key='CountingWords', body=body)
 	connection.close()
 	return {}
