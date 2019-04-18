@@ -44,7 +44,7 @@ class CloudFunctions:
         limits = {}
         cfexec = {}
 
-        limits['timeout'] = 600
+        limits['timeout'] = 60000
         limits['memory'] = 1024
 
         if limits['timeout'] and limits['memory']:

@@ -1,18 +1,18 @@
-import pika, json, re
+import pika, json, re, yaml
+#! collections.abc?!?!?
 from collections import Counter
 from cos_backend import COSBackend
 
 #dictionary used to save the result between callbacks
 df = {}
 #number of iterations done
-n = None
+n = 0
 #number max of iterations
-iterations = None
+iterations = 0
 #obd needed for the use of ibm COS
 odb = None
 #the name of the book we are analysing, needed for the result file's name
 fileName = ""
-#COS's bucket where the files will be saved
 bucket = ""
 
 #CountingWords function send its result as a body with this format: {'words': wordsNumber}
@@ -23,15 +23,20 @@ def CountingWordsCallback(ch, method, properties, body):
 
     #the body given is converted into a json
     received_data = json.loads(body.decode('UTF-8'))
-
-    #Combine fileFromServer with previous work
+    #create auxiliar dictionary
     daux = {}
+    #daux = df + received data
     daux = Counter(df) + Counter(received_data)
+    #counter -> dict
     df = dict(daux)
-
     n += 1
+    #!for me
+    print(n)
+    print(received_data)
+    print(df)
 
     if(n == iterations):
+        #? can we put this into a function?
         global odb
         global fileName
         global bucket
@@ -48,23 +53,27 @@ def WordCountCallback(ch, method, properties, body):
         global n
         global odb
         global iterations
-        global bucket
 
         #fileFromServer -> wordCount result. Got it from download the file its name is the body given
-        fileFromServer = odb.get_object(bucket, body.decode('UTF-8')).decode('UTF-8', errors='ignore')
+        fileFromServer = odb.get_object("magisd", body.decode('UTF-8')).decode('UTF-8', errors='ignore')
         #Delete the temporal file created by wordCount function
-        odb.delete_object(bucket, body.decode('UTF-8', errors='ignore'))
+        odb.delete_object("magisd", body.decode('UTF-8', errors='ignore'))
         #String -> json
         received_data = json.loads(fileFromServer)
 
-        #Combine fileFromServer with previous work
+        #create auxiliar dictionary
         daux = {}
+        #daux = df + received_data
         daux = Counter(df) + Counter(received_data)
+        #counter -> dict
         df = dict(daux)
-
         n += 1
+        #!for me
+        print(n)
         if(n == iterations):
+            #? can we put this into a function?
             global fileName
+            global bucket
             #dictionary -> json
             dumped_json_string = json.dumps(df)
             #save result to cloud  name:book.txt -> bookWordCountResult.txt
@@ -73,30 +82,23 @@ def WordCountCallback(ch, method, properties, body):
             ch.stop_consuming()
             
 #def main(args):
-def main(args):
-    #global variables are needed since callback methods have always the same parameters (ch, method, properties, body)
+def main():
     global odb
     global iterations
     global fileName
     global bucket
-    global n
-    global df
     
     #load necessary arguments
-    s1 = json.dumps(args)
-    args = json.loads(s1)
-    res = args["res"]
+    with open('ibm_cloud_config', 'r') as config_file:
+        res = yaml.safe_load(config_file)
 
-	#inicialize global variables
     odb = COSBackend(res["ibm_cos"])
-    bucket = res["ibm_cos"]["bucket"]
-    iterations = args["iter"]
-    fileName = args["fileName"]
-    n = 0
-    df = {}
-
-    #Pika configuration
     url = res["rabbitmq"]["url"]
+    iterations = 10
+    fileName = 'prova'
+    bucket = res["ibm_cos"]["bucket"]
+
+     #Pika configuration
     params = pika.URLParameters(url)
     connection = pika.BlockingConnection(params)
     channel = connection.channel()
@@ -108,16 +110,20 @@ def main(args):
     result = channel.queue_declare('WordCount')
     WordCount_queue = result.method.queue
 
+    
     #each queue has its own callback
     channel.basic_consume(WordCountCallback, queue=WordCount_queue, no_ack=True)
     channel.basic_consume(CountingWordsCallback, queue=CountingWords_queue, no_ack=True)
     #start receiving messages
     channel.start_consuming()
-
+    #channel.stop_consuming()
     channel.queue_delete(queue=WordCount_queue)
     channel.queue_delete(queue=CountingWords_queue)
     #close rabbitmq's connection
     connection.close()
 
     return{}
+
+if __name__ == '__main__':
+    main()
 
