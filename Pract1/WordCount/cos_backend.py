@@ -4,10 +4,10 @@ import json
 
 
 class COSBackend:
-    def __init__ (self, endpoint, secret_key, access_key):
-        service_endpoint = endpoint
-        secret_key = secret_key
-        access_key = access_key
+    def __init__ (self, config):
+        service_endpoint = config['endpoint']
+        secret_key = config['secret_key']
+        access_key = config['access_key']
         client_config = ibm_botocore.client.Config(max_pool_connections=200)
 
         self.cos_client = ibm_boto3.client(
