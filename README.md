@@ -6,7 +6,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Is necessary a configuration file (in .yaml format) located in the root direcory of the project, and named ibm_cloud_config with the following format:
+Is requiered a configuration file (in .yaml format) located in the root direcory of the project, and named ibm_cloud_config in order to have access to those services.
+ibm_cloud_config follows the following format:
 
 ```
 ibm_cf:
@@ -20,7 +21,7 @@ ibm_cos:
     access_key : ACCESS_KEY
     secret_key : SECRET_KEY
 
-rabbitmq;
+rabbitmq:
     url         : URL
 ```
 
