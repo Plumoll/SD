@@ -46,8 +46,8 @@ The program can be executed with the following comand:
 ```
 python3 orchestrator textFile numberWorkers
 ```
-* textFile as the name of the file the program is going to analyse
-* numberWorkers as the number of paralel functions the program is going to call
+* **textFile** as the name of the file the program is going to analyse
+* **numberWorkers** as the number of paralel functions the program is going to call
 
 ## Built With
 
