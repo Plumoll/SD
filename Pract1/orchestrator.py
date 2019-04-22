@@ -10,15 +10,13 @@ from cos_backend import COSBackend
 #       fileSize    -> total size of the file we want to analyse
 #       res         -> loaded configuration from ibm_cloud_config
 def invokeFunctions(function, nFunctions, fileSize, fileName, res):
-    #last invoked function's topRange
     bottomRange = 0
     #configure cloud function library
     cf = CloudFunctions(res['ibm_cf'])
 
     #range(0, nFunctions-1) since the last one needs to be invoked different
     for i in range(0, nFunctions-1):
-        #fileSize/nFunctions as every function will operate with more or less the same amount of data
-        #bottomRange to not give the same data as the previous one
+        #set the next function range
         topRange = int(fileSize/nFunctions) + bottomRange
 
         #invoke the function with all its parameters
@@ -34,7 +32,6 @@ def invokeFunctions(function, nFunctions, fileSize, fileName, res):
     #invoke with result as we want the time needed to finish.
     #  param -> res, nIterations, fileName
     _ = cf.invoke_with_result("reduce" ,{"res": res, "iter":nFunctions, "fileName":fileName})
-    #print(_)
 
 if __name__=='__main__':
     #read the arguments given
@@ -50,14 +47,12 @@ if __name__=='__main__':
     #chech the total file of the file given as argument
     fileSize = int(odb.head_object(res['ibm_cos']["bucket"], fileName)["content-length"])
 
-    #start clock
     start = time.time()
     #call the function nFunctions times and the reduce at the end
     #invokeFunctions(functionType, nFunctions,  fileSize, fileName, res)
     #invokeFunctions('wordCount', nFunctions,  fileSize, fileName, res)
     end1 = time.time()
     invokeFunctions('countingWords1', nFunctions,  fileSize, fileName, res)
-    #finish clock
     end2 = time.time()
     print("wordCount function's time: {0}".format(end1 - start))
     print("CountingWords function's time: {0}".format(end2 - end1))
