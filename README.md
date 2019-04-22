@@ -41,13 +41,17 @@ python3 createFunctions.py
 ```
 ## Running the program
 
-The program can be executed with the following comand:
+The program can be executed with the following command:
 
 ```
 python3 orchestrator textFile numberWorkers
 ```
 * **textFile** as the name of the file the program is going to analyse
 * **numberWorkers** as the number of paralel functions the program is going to call
+for example the following command would analyse the pg2000.txt file with 10 workers
+```
+python3 orchestrator.py pg2000.txt 10
+```
 
 ## Built With
 
