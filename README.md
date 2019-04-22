@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
@@ -39,6 +39,15 @@ To run the code is necessary to have some functions on the cloud, they can be cr
 ```
 python3 createFunctions.py
 ```
+## Running the program
+
+The program can be executed with the following comand:
+
+```
+python3 orchestrator textFile numberWorkers
+```
+* textFile as the name of the file the program is going to analyse
+* numberWorkers as the number of paralel functions the program is going to call
 
 ## Built With
 
