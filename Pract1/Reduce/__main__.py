@@ -72,7 +72,6 @@ def WordCountCallback(ch, method, properties, body):
             #once we've saved the result the connection will be closed
             ch.stop_consuming()
             
-#def main(args):
 def main(args):
     #global variables are needed since callback methods have always the same parameters (ch, method, properties, body)
     global odb
@@ -87,7 +86,7 @@ def main(args):
     args = json.loads(s1)
     res = args["res"]
 
-	#inicialize global variables
+    #inicialize global variables
     odb = COSBackend(res["ibm_cos"])
     bucket = res["ibm_cos"]["bucket"]
     iterations = args["iter"]

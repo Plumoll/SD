@@ -14,7 +14,7 @@ def selectRange(fileName, rang, res):
 	odb = COSBackend(res['ibm_cos'])
 	#read 20 bytes from file
 	fileFromServer = odb.get_object(res['ibm_cos']["bucket"], fileName, extra_get_args={'Range':'bytes={0}-{1}'.format(rang-20, rang)}).decode('UTF-8',errors='ignore')
-	#Search an " " into the text
+	#Search an " " in the text
 	while(fileFromServer[-1] != " "):
 		fileFromServer = fileFromServer[:-1]
 		rang = rang - 1
@@ -31,7 +31,7 @@ def main(args):
 	bottomRange = int(args["bottomRange"])
 	#configure COS library
 	odb = COSBackend(res["ibm_cos"])
-	#inicialize counter (we'll need it later)
+
 	counts = Counter()
 	
 	#pika configuration
@@ -58,7 +58,7 @@ def main(args):
 	#Delete "" in array
 	stringSplitted = list(filter(None, stringSplitted))
 
-	#convert array into count:
+	#convert array to count:
 	#	{word1:numberWord1, word2:numberWord2...wordN:numberWordN}
 	counts.update(word.strip('.,?!"\'').lower() for word in stringSplitted)
 	#count to dict
