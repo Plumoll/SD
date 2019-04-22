@@ -6,15 +6,34 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
+Is necessary a configuration file (in .yaml format) located in the root direcory of the project, and named ibm_cloud_config with the following format:
+
+```
+ibm_cf:
+    endpoint    : CF_API_ENDPOINT
+    namespace   : CF_HOST
+    api_key     : CF_API_KEY
+    bucket      : Bucket
+
+ibm_cos:
+    endpoint   : COS_API_ENDPOINT
+    access_key : ACCESS_KEY
+    secret_key : SECRET_KEY
+
+rabbitmq;
+    url         : URL
+```
+
 yaml is necessary to read the configuration file, and it can be intalled like this:
 
 ```
-sudo pip install yaml
+sudo pip install pyyaml
 ```
+
 
 ### Installing
 
-To run the code is necessary to have some functions on the cloud, they can be created with the code createFunctions.py
+To run the code is necessary to have some functions on the cloud, they can be created with the  createFunctions.py code
 
 ```
 python3 createFunctions.py
