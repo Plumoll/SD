@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) [2019] [GuillemFrisach/MagíTell]
+Copyright (c) [2019] [Guillem Frisach/Magí Tell]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
