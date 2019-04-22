@@ -29,3 +29,7 @@ python3 createFunctions.py
 
 * **Guillem Frisach Pedrola** 
 * **Magí Tell Bonet** 
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
