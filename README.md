@@ -20,3 +20,12 @@ To run the code is necessary to have some functions on the cloud, they can be cr
 python3 createFunctions.py
 ```
 
+## Built With
+
+* [IBM cloud](https://www.ibm.com/uk-en/cloud) - cloud functions
+* [rabbitmq](https://www.rabbitmq.com) - queue management
+
+## Authors
+
+* **Guillem Frisach Pedrola** 
+* **Magí Tell Bonet** 

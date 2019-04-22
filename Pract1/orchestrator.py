@@ -26,7 +26,7 @@ def invokeFunctions(function, nFunctions, fileSize, fileName, res):
         bottomRange = topRange
     
     #same as the previous ones but topRange is replaced for fileSize
-    cf.invoke(function ,{"res": res, "fileName": fileName, "topRange": str(bottomRange), "bottomRange": str(topRange), "functionNumber":str(-1)})
+    cf.invoke(function ,{"res": res, "fileName": fileName, "topRange": str(fileSize), "bottomRange": str(bottomRange), "functionNumber":str(-1)})
 
     #invoke the reduce function(recieves messages from the other ones)
     #invoke with result as we want the time needed to finish.
