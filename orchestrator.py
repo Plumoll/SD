@@ -11,18 +11,14 @@ from cos_backend import COSBackend
 #       res         -> loaded configuration from ibm_cloud_config
 def invokeFunctions(function, nFunctions, fileSize, fileName, res):
     bottomRange = 0
-    #configure cloud function library
     cf = CloudFunctions(res['ibm_cf'])
 
     #range(0, nFunctions-1) since the last one needs to be invoked different
     for i in range(0, nFunctions-1):
-        #set the next function range
         topRange = int(fileSize/nFunctions) + bottomRange
-
         #invoke the function with all its parameters
         #param -> res, filemame, bottom and top range, fileNumber
         cf.invoke(function ,{"res": res, "fileName": fileName, "topRange": str(topRange), "bottomRange": str(bottomRange), "functionNumber":str(i)})
-        
         bottomRange = topRange
     
     #same as the previous ones but topRange is replaced for fileSize
@@ -32,6 +28,7 @@ def invokeFunctions(function, nFunctions, fileSize, fileName, res):
     #invoke with result as we want the time needed to finish.
     #  param -> res, nIterations, fileName
     _ = cf.invoke_with_result("reduce" ,{"res": res, "iter":nFunctions, "fileName":fileName})
+    #check if has finished well
     if _ == {}:
         print(function+' finished')
     else:
@@ -66,14 +63,14 @@ if __name__=='__main__':
     print("CountingWords function's time: {0}".format(end2 - end1))
 
     #download generated files
-    # fileFromServer = odb.get_object(res['ibm_cos']["bucket"], fileName[:-4] + 'CountingWordResult.txt')
-    # newFile = open(fileName[:-4] + 'CountingWordResult.txt', "wb")
-    # newFile.write(fileFromServer)
-    # newFile.close()
-    # print(fileName[:-4] + 'CountingWordResult.txt downloaded')
+    fileFromServer = odb.get_object(res['ibm_cos']["bucket"], fileName[:-4] + 'CountingWordResult.txt')
+    newFile = open(fileName[:-4] + 'CountingWordResult.txt', "wb")
+    newFile.write(fileFromServer)
+    newFile.close()
+    print(fileName[:-4] + 'CountingWordResult.txt downloaded')
 
-    # fileFromServer = odb.get_object(res['ibm_cos']["bucket"], fileName[:-4] + 'WordCountResult.txt')
-    # newFile = open(fileName[:-4] + 'WordCountResult.txt', "wb")
-    # newFile.write(fileFromServer)
-    # newFile.close()
-    # print(fileName[:-4] + 'WordCountResult.txt downloaded')
+    fileFromServer = odb.get_object(res['ibm_cos']["bucket"], fileName[:-4] + 'WordCountResult.txt')
+    newFile = open(fileName[:-4] + 'WordCountResult.txt', "wb")
+    newFile.write(fileFromServer)
+    newFile.close()
+    print(fileName[:-4] + 'WordCountResult.txt downloaded')

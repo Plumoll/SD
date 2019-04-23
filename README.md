@@ -15,12 +15,12 @@ ibm_cf:
     endpoint    : CF_API_ENDPOINT
     namespace   : CF_HOST
     api_key     : CF_API_KEY
-    bucket      : Bucket
 
 ibm_cos:
     endpoint   : COS_API_ENDPOINT
     access_key : ACCESS_KEY
     secret_key : SECRET_KEY
+    bucket     : Bucket
 
 rabbitmq:
     url         : URL
