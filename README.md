@@ -1,9 +1,10 @@
-<p align="justify">
+
 # Task 1: Communication models and Middleware
 
 ## Getting Started
-
+<p align="justify">
 zfgf fg sfdg sdfg dfsg sdfgsdfg sdfgsdf gsdfgsdfgs fgsdfgsfdgsfgsdh ghsghsdfgsdfg sdfgsdfgsdfgsfdg sdfgsfgsfdg sdfgsfgfgsg rgsdfgfdjfg dfgsgfsdf gsdfgsd fgsfd gs dfg sfdgsdf gsdfgs dfgsdfg sf gsf gsfdgs gfsfgsfgs fgsfgsf gsfg sfgsdfgsdfg sfgfsgfs gsfgfsg fsgsgsfdg sfgdsf g
+<p>
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
@@ -89,4 +90,3 @@ A result of this code:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-<p>
