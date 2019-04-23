@@ -52,9 +52,9 @@ def main(args):
 	fileFromServer = odb.get_object(res["ibm_cos"]["bucket"], args["fileName"], extra_get_args={"Range": "bytes={0}-{1}".format(bottomRange, topRange)}).decode('UTF-8', errors='ignore')
 
 	#Delete unwanted characters
-	stringFiltered = re.sub('[^A-Za-z \n]+', '', fileFromServer)
+	stringSplitted = re.sub('[^A-Za-z \n]+', '', fileFromServer)
 	#Split the string
-	stringSplitted = re.split("\ |\n", stringFiltered)
+	stringSplitted = re.split("\ |\n", stringSplitted)
 	#Delete "" in array
 	stringSplitted = list(filter(None, stringSplitted))
 
