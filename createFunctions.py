@@ -15,10 +15,10 @@ if __name__ == '__main__':
 
     #create new actions, they are updated in case of being created already
     f = open('reduce.zip','rb')
-    cf.create_action('reduce', f.read(), image='ibmfunctions/action-python-v3.7')
+    cf.create_action('reduce', f.read(), kind='python:3.7')
 
     f = open('wordCount.zip','rb')
-    cf.create_action('wordCount', f.read(), image='ibmfunctions/action-python-v3.7')
+    cf.create_action('wordCount', f.read(), kind='python:3.7')
 
     f = open('countingWords.zip','rb')
     cf.create_action('countingWords', f.read(), kind='python:3.7')
