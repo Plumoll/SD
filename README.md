@@ -57,6 +57,10 @@ for example the following command would analyse the pg2000.txt file with 10 work
 python3 orchestrator.py pg2000.txt 10
 ```
 
+## Speedup
+
+![](Images/speedup.png)
+
 ## Built With
 
 * [IBM cloud](https://www.ibm.com/uk-en/cloud) - cloud functions
