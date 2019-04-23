@@ -14,7 +14,7 @@ def selectRange(fileName, rang, res):
 	odb = COSBackend(res['ibm_cos'])
 	#read 20 bytes from file
 	fileFromServer = odb.get_object(res['ibm_cos']["bucket"], fileName, extra_get_args={'Range':'bytes={0}-{1}'.format(rang-20, rang)}).decode('UTF-8',errors='ignore')
-	#Search an " " in the text
+	#Search an space in the text
 	while(fileFromServer[-1] != " "):
 		fileFromServer = fileFromServer[:-1]
 		rang = rang - 1

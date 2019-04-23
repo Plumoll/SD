@@ -101,20 +101,16 @@ def main(args):
     channel = connection.channel()
     channel.basic_qos(prefetch_count=1)
     
-    #a queue for each function
-    result = channel.queue_declare('CountingWords')
-    CountingWords_queue = result.method.queue
-    result = channel.queue_declare('WordCount')
-    WordCount_queue = result.method.queue
+    #a different queue for each function
+    channel.queue_declare('CountingWords')
+    channel.queue_declare('WordCount')
 
     #each queue has its own callback
-    channel.basic_consume(WordCountCallback, queue=WordCount_queue, no_ack=True)
-    channel.basic_consume(CountingWordsCallback, queue=CountingWords_queue, no_ack=True)
+    channel.basic_consume(WordCountCallback, queue='CountingWords', no_ack=True)
+    channel.basic_consume(CountingWordsCallback, queue='WordCount', no_ack=True)
     #start receiving messages
     channel.start_consuming()
 
-    channel.queue_delete(queue=WordCount_queue)
-    channel.queue_delete(queue=CountingWords_queue)
     #close rabbitmq's connection
     connection.close()
 
