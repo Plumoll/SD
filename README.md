@@ -64,8 +64,9 @@ this program executes the functions some times with different number of workers 
 A result of this code:
 ![](Images/speedup.png)
 
-##Our project
-###Important points
+## Our project
+
+### Important points
 * Numbers and non UTF-8 characters are deleted 
 * As unwanted characters are deleted, words like www.github.com are transformed to wwwgithubcom
 * The workers do not cut any word
