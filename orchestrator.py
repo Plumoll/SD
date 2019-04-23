@@ -49,7 +49,7 @@ if __name__=='__main__':
     fileSize = int(odb.head_object(res['ibm_cos']["bucket"], fileName)["content-length"])
     #check if there are enough workers
     print(fileSize / nFunctions)
-    if(fileSize / nFunctions) > 110000000: #this number is an aproximation i don't know the limit
+    if(fileSize / nFunctions) > 110000000: #this number is an aproximation we don't know the limit
         print("more workers are requiered for this file")
         exit(-1)
 
