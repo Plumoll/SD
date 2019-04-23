@@ -99,15 +99,14 @@ def main(args):
     params = pika.URLParameters(url)
     connection = pika.BlockingConnection(params)
     channel = connection.channel()
-    channel.basic_qos(prefetch_count=1)
     
     #a different queue for each function
     channel.queue_declare('CountingWords')
     channel.queue_declare('WordCount')
 
     #each queue has its own callback
-    channel.basic_consume(WordCountCallback, queue='CountingWords', no_ack=True)
-    channel.basic_consume(CountingWordsCallback, queue='WordCount', no_ack=True)
+    channel.basic_consume(WordCountCallback, queue='WordCount', no_ack=True)
+    channel.basic_consume(CountingWordsCallback, queue='CountingWords', no_ack=True)
     #start receiving messages
     channel.start_consuming()
 
