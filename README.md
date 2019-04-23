@@ -59,9 +59,9 @@ python3 orchestrator.py pg2000.txt 10
 
 ## Speedup
 
-A code has been created in order to ease the execution of the speedup. It can be found in the folder called speedup and it is called like this:
+A code has been created in order to ease the execution of different number of workers . It can be found in the folder called speedup and it is called like this:
 ```
-python3 speedup.py textFile
+python3 workers.py textFile
 ```
 this program executes the functions some times with different number of workers saying the time they last.\
 A result of this code:
