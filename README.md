@@ -1,3 +1,4 @@
+<p align="justify">
 # Task 1: Communication models and Middleware
 
 ## Getting Started
@@ -72,6 +73,7 @@ A result of this code:
 * The workers do not cut any word
 * 2 different queues of rabbitmq are used, one for each worker type
 
+### 
 
 ## Built With
 
@@ -86,3 +88,4 @@ A result of this code:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+<p>
