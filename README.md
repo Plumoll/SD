@@ -5,6 +5,8 @@
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
+This project is an evaluative task for "Sistemes Distribuits" (Distibuted systems), a subject from Universitat Rovira i Virgili's Grau en Enginyeria Informàtica.
+
 ### Prerequisites
 
 Is requiered a configuration file (in .yaml format) located in the root direcory of the project, and named ibm_cloud_config in order to have access to those services.
